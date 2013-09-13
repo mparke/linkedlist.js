@@ -2,8 +2,6 @@
 
 A JavaScript Linked List implementation.
 
-LinkedList.min.js includes both ListNode and LinkedList Classes
-
 ##### ListNode(id, data)
 - id(id)      get or set the id
 - data(data)  get or set the data
