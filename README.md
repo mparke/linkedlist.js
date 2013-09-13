@@ -1,6 +1,6 @@
 ### LinkedList
 
-A JavaScript Linked List implementation.
+A JavaScript Implementation of a Doubly Linked List.
 
 ##### ListNode(id, data)
 - id(id)      get or set the id
