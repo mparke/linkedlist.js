@@ -1,0 +1,47 @@
+<html>
+<head>
+  <link rel="shortcut icon" type="image/png" href="../jasmine_lib/jasmine_favicon.png">
+  <link rel="stylesheet" type="text/css" href="../jasmine_lib/jasmine.css">
+  <script type="text/javascript" src="../jasmine_lib/jasmine.js"></script>
+  <script type="text/javascript" src="../jasmine_lib/jasmine-html.js"></script>
+
+  <!-- include source files here... -->
+  <script src="../../LinkedList.min.js"></script>
+
+  <!-- include spec files here... -->
+  <script type="text/javascript" src="../ListNode/ListNode_Test.js"></script>
+  <script type="text/javascript" src="../LinkedList/LinkedList_Test.js"></script>
+
+  <!-- jasmine environment initialization -->
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var htmlReporter = new jasmine.HtmlReporter();
+
+      jasmineEnv.addReporter(htmlReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return htmlReporter.specFilter(spec);
+      };
+
+      var currentWindowOnload = window.onload;
+
+      window.onload = function() {
+        if (currentWindowOnload) {
+          currentWindowOnload();
+        }
+        execJasmine();
+      };
+
+      function execJasmine() {
+        jasmineEnv.execute();
+      }
+
+    })();
+  </script>
+</head>
+<body>
+</body>
+</html>
