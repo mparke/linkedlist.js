@@ -1,33 +1,49 @@
 var ListNode = (function(){
 
-	function ListNode(id, data, next, prev){
-		this.id = id || null;
-   		this.data = data || null;
-    	this.next = next || null;
-    	this.prev = prev || null;
+	function ListNode(id, data){
+		this._id = id || null;
+ 		this._data = data || null;
+  	this.next = null;
+  	this.prev = null;
 	}
 
 	ListNode.prototype = {
 
-	    setId: function (id) {
-	        if(typeof id === 'number'){
-	            this.id = id;
-	        }else{
-	            throw 'Id must be an integer.';
-	        }
-	    },
+		id: function(id) {
+			if(id) {
+				if(typeof id === 'number') {
+            this._id = id;
+        }else {
+            throw new Error('Id must be an integer.');
+        }
+			}else {
+				return this._id;
+			}
+		},
 
-	    getId: function () {
-	        return this.id;
-	    },
+		data: function(data) {
+			if(data) {
+				this._data = data;
+			}else {
+				return this._data;
+			}
+		},
 
-	    setData: function (data) {
-	        this.data = data;
-	    },
+    hasNext: function() {
+      if(this.next !== null) {
+        return this.next.id() !== null;
+      }
 
-	    getData: function () {
-	        return this.data;
-	    }
+      return false;
+    },
+
+    hasPrev: function() {
+      if(this.prev !== null) {
+        return this.prev.id() !== null;
+      }
+
+      return false;
+    }
 	};
 
 	return ListNode;

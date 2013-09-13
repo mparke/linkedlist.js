@@ -1,58 +1,88 @@
 describe('Node', function(){
 
 	it('can be instantiated with defaults.', function(){
-		var node = Hawk.gen('Node');
+		var node = new ListNode();
 
 		expect(node).toBeDefined();
-		expect(node.id).toBeNull();
-		expect(node.data).toBeNull();
+		expect(node._id).toBeNull();
+		expect(node._data).toBeNull();
 		expect(node.next).toBeNull();
-		expect(node.prev).toBeNull();		
+		expect(node.prev).toBeNull();
 	});
 
-	it('Node.setId: can set id.', function(){
-		var node = Hawk.gen('Node');
-		
-		node.setId(25);
-		expect(node.id).toBe(25);
-		node.setId(100);
-		expect(node.id).toBe(100);
+	it('can set id.', function(){
+		var node = new ListNode();
 
-		expect(function(){node.setId('hello')}).toThrow(new Hawk.NumberTypeError());
-		expect(function(){node.setId({})}).toThrow(new Hawk.NumberTypeError());
-		expect(function(){node.setId([])}).toThrow(new Hawk.NumberTypeError());
-		expect(function(){node.setId(null)}).toThrow(new Hawk.NumberTypeError());
-		expect(function(){node.setId(undefined)}).toThrow(new Hawk.NumberTypeError());
+		node.id(25);
+		expect(node.id()).toBe(25);
+
+		node.id(100);
+		expect(node.id()).toBe(100);
+
+		expect(function(){
+			node.id('hello')
+		}).toThrow(new Error('Id must be an integer.'));
+
+		expect(function(){
+			node.id({})
+		}).toThrow(new Error('Id must be an integer.'));
+
+		expect(function(){
+			node.id([])
+		}).toThrow(new Error('Id must be an integer.'));
 	});
 
-	it('Node.getId: can get id.', function(){
-		var node = Hawk.gen('Node');
+	it('can get id.', function(){
+		var node = new ListNode();
 
-		node.setId(100);
-		expect(node.getId()).toBe(100);
+		node.id(100);
+		expect(node.id()).toBe(100);
 
-		node.setId(500);
-		expect(node.getId()).toBe(500);
+		node.id(500);
+		expect(node.id()).toBe(500);
 	});
 
-	it('Node.setData: can set data.', function(){
-		var node = Hawk.gen('Node');
+	it('can set data.', function(){
+		var node = new ListNode();
 
-		node.setData({val:10});
-		expect(node.data.val).toBe(10);
+		node.data({val:10});
+		expect(node.data().val).toBe(10);
 
-		node.setData({val:200});
-		expect(node.data.val).toBe(200);
+		node.data({val:200});
+		expect(node.data().val).toBe(200);
 	});
 
-	it('Node.getData: can get data.', function(){
-		var node = Hawk.gen('Node');
+	it('can get data.', function(){
+		var node = new ListNode();
 
-		node.setData({val:10});
-		expect(node.getData().val).toBe(10);
+		node.data({val:10});
+		expect(node.data().val).toBe(10);
 
-		node.setData({val:200});
-		expect(node.getData().val).toBe(200);
+		node.data({val:200});
+		expect(node.data().val).toBe(200);
 	});
 
+	it('can return has next', function() {
+		var node = new ListNode();
+
+		expect(node.hasNext()).toBe(false);
+
+		node.next = new ListNode();
+		expect(node.hasNext()).toBe(false);
+
+		node.next = new ListNode(1);
+		expect(node.hasNext()).toBe(true);
+	});
+
+	it('can return has prev', function() {
+		var node = new ListNode();
+
+		expect(node.hasPrev()).toBe(false);
+
+		node.prev = new ListNode();
+		expect(node.hasPrev()).toBe(false);
+
+		node.prev = new ListNode(1);
+		expect(node.hasPrev()).toBe(true);
+	});
 });
