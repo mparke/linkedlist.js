@@ -1,7 +1,7 @@
-var LinkedList = (function(){
+var LinkedList = (function() {
 
-	function LinkedList(){
-		//initialize end buffer nodes
+  function LinkedList() {
+    //initialize end buffer nodes
     this.start = new ListNode();
     this.end = new ListNode();
 
@@ -15,36 +15,42 @@ var LinkedList = (function(){
     //initialize counters
     this._idCounter = 0;
     this._numNodes = 0;
-	}
+  }
 
-	LinkedList.prototype = {
-
-    /**
-    *   Adds data wrapped in a Node object to the end of the linked list
-    *   @param {object} data
-    */
-    addLast: function (data) {
-      var node = new ListNode(this._idCounter, data);
-
-      last = this.end;
-
-      this.insertBefore(last, node);
-
-      ++this._idCounter;
-      ++this._numNodes;
-    },
+  LinkedList.prototype = {
 
     /**
     *   Inserts a node before another node in the linked list
     *   @param {Node} toInsertBefore
     *   @param {Node} node
     */
-    insertBefore: function (toInsertBefore, node) {
-      node.next = toInsertBefore;
-      node.prev = toInsertBefore.prev;
+    insertBefore: function (toInsertBefore, data) {
+      var newNode = new ListNode(this._idCounter, data);
 
-      toInsertBefore.prev.next = node;
-      toInsertBefore.prev = node;
+      newNode.next = toInsertBefore;
+      newNode.prev = toInsertBefore.prev;
+
+      toInsertBefore.prev.next = newNode;
+      toInsertBefore.prev = newNode;
+
+      ++this._idCounter;
+      ++this._numNodes;
+    },
+
+    /**
+    *   Adds data wrapped in a Node object to the end of the linked list
+    *   @param {object} data
+    */
+    addLast: function (data) {
+      this.insertBefore(this.end, data);
+    },
+
+    /**
+    *   Alias for addLast
+    *   @param {object} data
+    */
+    add: function (data) {
+      this.addLast(data);
     },
 
     /**
@@ -53,9 +59,9 @@ var LinkedList = (function(){
     */
     getFirst: function () {
       if (this._numNodes === 0) {
-          return null;
+        return null;
       } else {
-          return this.start.next;
+        return this.start.next;
       }
     },
 
@@ -65,10 +71,18 @@ var LinkedList = (function(){
     */
     getLast: function () {
       if (this._numNodes === 0) {
-          return null;
+        return null;
       } else {
-          return this.end.prev;
+        return this.end.prev;
       }
+    },
+
+    /**
+    *   Gets and returns the size of the linked list
+    *   @return {number}
+    */
+    size: function () {
+      return this._numNodes;
     },
 
     /**
@@ -78,19 +92,19 @@ var LinkedList = (function(){
     */
     getFromFirst: function (index) {
       var count = 0,
-          temp = this.start.next;
+        temp = this.start.next;
 
-      if(index >= 0){
-          while (count < index && temp !== null) {
-              temp = temp.next;
-              ++count;
-          }
-      }else{
-          temp = null;
+      if(index >= 0) {
+        while (count < index && temp !== null) {
+          temp = temp.next;
+          ++count;
+        }
+      } else {
+        temp = null;
       }
 
-      if(temp === null){
-          throw 'Index out of bounds.';
+      if(temp === null) {
+        throw 'Index out of bounds.';
       }
 
       return temp;
@@ -102,37 +116,17 @@ var LinkedList = (function(){
     */
     get: function (index) {
       var count = 0,
-          temp = null;
+        temp = null;
 
       if (index === 0) {
-          temp = this.getFirst();
+        temp = this.getFirst();
       } else if (index === this._numNodes - 1) {
-          temp = this.getLast();
+        temp = this.getLast();
       } else {
-          temp = this.getFromFirst(index);
+        temp = this.getFromFirst(index);
       }
 
       return temp;
-    },
-
-    /**
-    *		Inserts a node at the given index, shifting the list forward
-    *   @param {number} index
-    *		@param {object} data
-    */
-    insert: function(index, data) {
-    	var toInsertBefore = this.get(index),
-    		newNode = new ListNode(this._idCounter, data);
-
-    	this.insertBefore(toInsertBefore, newNode);
-    },
-
-    /**
-    *   Gets and returns the size of the linked list
-    *   @return {number}
-    */
-    size: function () {
-      return this._numNodes;
     },
 
     /**
@@ -177,35 +171,57 @@ var LinkedList = (function(){
       return temp;
     },
 
-    removeAll: function(){
+    /**
+    *   Removes all nodes from the list
+    */
+    removeAll: function() {
       this.start.next = this.end;
       this.end.prev = this.start;
       this._numNodes = 0;
+      this._idCounter = 0;
     },
 
     /**
     *		Iterates the list calling the given fn for each node
     *		@param {function} fn
     */
-    each: function(fn) {
-    	var temp = this.getFirst();
+    each: function(iterator) {
+      var temp = this.start;
 
-    	if(temp) {
-    		fn(temp);
-
-    		while(temp.hasNext()) {
-    			temp = temp.next;
-    			fn(temp);
-	    	}
-    	}
+      while(temp.hasNext()) {
+        temp = temp.next;
+        iterator(temp);
+      }
     },
 
-    /**
-    *   Alias for addLast
-    *   @param {object} data
-    */
-    add: function (data) {
-      this.addLast(data);
+    find: function(iterator) {
+      var temp = this.start,
+        found = false,
+        result = null;
+
+      while(temp.hasNext() && !found) {
+        temp = temp.next;
+        if(iterator(temp)) {
+          result = temp;
+          found = true;
+        }
+      }
+
+      return result;
+    },
+
+    map: function(iterator) {
+      var temp = this.start,
+        results = [];
+
+      while(temp.hasNext()) {
+        temp = temp.next;
+        if(iterator(temp)) {
+          results.push(temp);
+        }
+      }
+
+      return results;
     },
 
     /**
@@ -213,7 +229,7 @@ var LinkedList = (function(){
     *		@param {object} data
     */
     push: function(data) {
-    	this.addLast(data);
+      this.addLast(data);
     },
 
     /**
@@ -221,24 +237,28 @@ var LinkedList = (function(){
     *		@param {object} data
     */
     unshift: function(data) {
-    	this.insertBefore(data, this.getFirst());
+      if(this._numNodes > 0) {
+        this.insertBefore(this.start.next, data);
+      }else {
+        this.insertBefore(this.end, data);
+      }
     },
 
     /**
-		*		Alias for removeLast
-		*/
+    *		Alias for removeLast
+    */
     pop: function() {
-    	return this.removeLast();
+      return this.removeLast();
     },
 
     /**
     *		Alias for removeFirst()
     */
     shift: function() {
-    	return this.removeFirst();
+      return this.removeFirst();
     }
-	};
+  };
 
-	return LinkedList;
+  return LinkedList;
 
 })();
